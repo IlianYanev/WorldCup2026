@@ -1,8 +1,142 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = null;
+    ViewData["Title"] = "Welcome - FIFA World Cup 2026";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/matches.css" asp-append-version="true" />
+    <style>
+        .hero-section {
+            padding: 80px 0;
+            position: relative;
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #eaeaea;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+        }
+        .stat-box {
+            border-left: 4px solid #0052B4;
+            padding-left: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-shape-3"></div>
+<div class="bg-shape-4"></div>
+<div class="bg-shape-5"></div>
+
+<nav class="navbar navbar-expand-lg navbar-dark mb-4">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand d-inline-flex align-items-center gap-2" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"></path>
+                <path d="M12 2a5 5 0 0 0-5 5v3c0 3.32 2.1 6.14 5 7 2.9-.86 5-3.68 5-7V7a5 5 0 0 0-5-5z"></path>
+            </svg>
+            <span>WorldCup2026</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-link-item">
+                    <a class="nav-link" asp-controller="Matches" asp-action="Index">Matches</a>
+                </li>
+                <li class="nav-link-item">
+                    <a class="nav-link" asp-controller="Standings" asp-action="Index">Standings</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="hero-section text-center mb-5">
+        <h1 class="display-4 fw-bold page-title mb-3">FIFA World Cup 2026</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 700px;">Welcome to the official tournament tracking dashboard for the FIFA World Cup 2026. Explore full match fixtures, real-time results, group standings, and the knockout stage bracket.</p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card h-100 p-4 shadow-sm feature-card rounded-3">
+                <h3 class="fw-bold mb-3" style="color: #1e2530;">About the World Cup</h3>
+                <p class="text-muted">The FIFA World Cup is the biggest and most prestigious football tournament on the planet, occurring once every four years. Since its inception in 1930, the tournament has continued to unite billions of passionate fans worldwide around the magic of the beautiful game, crowning the ultimate global champion.</p>
+                <div class="mt-auto pt-3">
+                    <div class="stat-box mb-2">
+                        <span class="fw-bold d-block">Inaugural Edition:</span>
+                        <span class="text-muted">Uruguay, 1930</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 p-4 shadow-sm feature-card rounded-3">
+                <h3 class="fw-bold mb-3" style="color: #0052B4;">The Historic 2026 Edition</h3>
+                <p class="text-muted">The 2026 edition marks the beginning of an entirely new era in football history. For the first time ever, a record-breaking 48 teams will compete in the finals (expanded from the traditional 32), while hosting duties are shared across three North American nations. Prepare for an unforgettable journey spanning 104 thrilling matches.</p>
+                <div class="mt-auto pt-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <span class="fw-bold d-block">Host Nations:</span>
+                                <span class="text-muted">USA, Canada, Mexico</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <span class="fw-bold d-block">Tournament Format:</span>
+                                <span class="text-muted">48 Teams / 12 Groups</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row text-center g-4 mb-5">
+        <div class="col-md-4">
+            <div class="p-4 border rounded-3 bg-white shadow-sm h-100 d-flex flex-column justify-content-center">
+                <h2 class="fw-bold page-title mb-1">48</h2>
+                <span class="text-uppercase text-muted fw-semibold small">Competing Teams</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 border rounded-3 bg-white shadow-sm h-100 d-flex flex-column justify-content-center">
+                <h2 class="fw-bold page-title mb-1">16</h2>
+                <span class="text-uppercase text-muted fw-semibold small">Host Cities</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 border rounded-3 bg-white shadow-sm h-100 d-flex flex-column justify-content-center">
+                <h2 class="fw-bold page-title mb-1">104</h2>
+                <span class="text-uppercase text-muted fw-semibold small">Total Matches</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center my-5">
+        <a asp-controller="Matches" asp-action="Index" class="btn btn-primary btn-lg px-4 me-3 shadow-sm" style="background-color: #0052B4; border-color: #0052B4;">View Fixtures</a>
+        <a asp-controller="Standings" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 shadow-sm">Standings & Brackets</a>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
