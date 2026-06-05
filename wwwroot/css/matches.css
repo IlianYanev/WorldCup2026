@@ -1,0 +1,138 @@
+body { 
+    background-color: #fcfcfc; 
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before,
+body::after,
+.bg-shape-3,
+.bg-shape-4,
+.bg-shape-5 {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+body::before {
+    top: -80px;
+    right: -100px;
+    width: 450px;
+    height: 450px;
+    background-color: #ff4500;
+    opacity: 0.08;
+}
+
+body::after {
+    bottom: -100px;
+    left: -150px;
+    width: 500px;
+    height: 500px;
+    background-color: #0044ff;
+    opacity: 0.08;
+}
+
+.bg-shape-3 {
+    top: 20%;
+    left: -120px;
+    width: 350px;
+    height: 350px;
+    background-color: #6a00ff;
+    opacity: 0.06;
+}
+
+.bg-shape-4 {
+    top: 50%;
+    right: -120px;
+    width: 400px;
+    height: 400px;
+    background-color: #00cc55;
+    opacity: 0.06;
+}
+
+.bg-shape-5 {
+    top: 78%;
+    left: 10%;
+    width: 280px;
+    height: 280px;
+    background-color: #ff0040;
+    opacity: 0.06;
+}
+
+.navbar {
+    background: linear-gradient(135deg, #1e2530, #11141a) !important;
+    border-bottom: 3px solid #0052B4;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 0.8rem 1rem;
+    position: relative;
+    z-index: 10;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #ffffff !important;
+}
+
+.navbar-nav .nav-link {
+    color: #e2e8f0 !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.container {
+    position: relative;
+    z-index: 5;
+}
+
+.page-title {
+    background: linear-gradient(135deg, #6A0dad, #0052B4, #E10600);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.match-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #eaeaea !important;
+}
+
+.match-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06) !important;
+}
+
+.score-box {
+    background-color: #1e2530;
+    color: #ffffff;
+    font-weight: bold;
+    min-width: 45px;
+    text-align: center;
+    border-radius: 6px;
+}
+
+.day-header {
+    color: #212529;
+    position: relative;
+    display: inline-block;
+}
+
+.day-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 4px;
+    background-color: #0052B4;
+    border-radius: 2px;
+}

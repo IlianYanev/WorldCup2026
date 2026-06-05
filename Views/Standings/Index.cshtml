@@ -1,0 +1,244 @@
+@model WorldCup2026.Models.WorldCupViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Standings & Brackets";
+    
+    var countryCodes = new Dictionary<string, string>
+    {
+        {"Mexico", "mx"}, {"South Africa", "za"}, {"South Korea", "kr"}, {"Czech Republic", "cz"},
+        {"Canada", "ca"}, {"Bosnia and Herzegovina", "ba"}, {"Qatar", "qa"}, {"Switzerland", "ch"},
+        {"Brazil", "br"}, {"Morocco", "ma"}, {"Haiti", "ht"}, {"Scotland", "gb-sct"},
+        {"USA", "us"}, {"Paraguay", "py"}, {"Australia", "au"}, {"Turkey", "tr"},
+        {"Germany", "de"}, {"Curacao", "cw"}, {"Ivory Coast", "ci"}, {"Ecuador", "ec"},
+        {"Netherlands", "nl"}, {"Japan", "jp"}, {"Sweden", "se"}, {"Tunisia", "tn"},
+        {"Spain", "es"}, {"Cape Verde", "cv"}, {"Belgium", "be"}, {"Egypt", "eg"},
+        {"Saudi Arabia", "sa"}, {"Uruguay", "uy"}, {"Iran", "ir"}, {"New Zealand", "nz"},
+        {"France", "fr"}, {"Senegal", "sn"}, {"Iraq", "iq"}, {"Norway", "no"},
+        {"Argentina", "ar"}, {"Algeria", "dz"}, {"Austria", "at"}, {"Jordan", "jo"},
+        {"Portugal", "pt"}, {"DR Congo", "cd"}, {"Uzbekistan", "uz"}, {"Colombia", "co"},
+        {"England", "gb-eng"}, {"Croatia", "hr"}, {"Ghana", "gh"}, {"Panama", "pa"}
+    };
+
+    var groupColors = new Dictionary<string, string>
+    {
+        {"A", "#6A0dad"}, {"B", "#0052B4"}, {"C", "#00B2A9"}, {"D", "#FF4500"},
+        {"E", "#007A33"}, {"F", "#E10600"}, {"G", "#9EFD38"}, {"H", "#FF1493"},
+        {"I", "#38B6FF"}, {"J", "#8B0000"}, {"K", "#FFA07A"}, {"L", "#111111"}
+    };
+
+    string GetFlagUrl(string countryName) => countryCodes.ContainsKey(countryName) ? $"https://flagcdn.com/w40/{countryCodes[countryName]}.png" : "https://placehold.co/40x30?text=⚽";
+    string GetGroupColor(string groupLetter) => groupColors.ContainsKey(groupLetter) ? groupColors[groupLetter] : "#212529";
+    string GetTextColor(string groupLetter) => (groupLetter == "G" || groupLetter == "K") ? "#111111" : "#FFFFFF";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/standings.css" asp-append-version="true" />
+</head>
+<body>
+
+<div class="bg-shape-3"></div>
+<div class="bg-shape-4"></div>
+<div class="bg-shape-5"></div>
+
+<nav class="navbar navbar-expand-lg navbar-dark mb-4">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand d-inline-flex align-items-center gap-2" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"></path>
+                <path d="M12 2a5 5 0 0 0-5 5v3c0 3.32 2.1 6.14 5 7 2.9-.86 5-3.68 5-7V7a5 5 0 0 0-5-5z"></path>
+            </svg>
+            <span>WorldCup2026</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-link-item">
+                    <a class="nav-link" asp-controller="Matches" asp-action="Index">Matches</a>
+                </li>
+                <li class="nav-link-item">
+                    <a class="nav-link active" asp-controller="Standings" asp-action="Index">Standings</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid px-4 mt-4">
+    <h1 class="text-center mb-5 fw-bold" style="font-size: 2.2rem; background: linear-gradient(135deg, #6A0dad, #0052B4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Tournament Statistics & Brackets</h1>
+
+    <h2 class="section-title mb-4">📊 Group Standings</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 mb-5">
+        @foreach (var group in Model.Groups)
+        {
+            var headerBg = GetGroupColor(group.Key);
+            var headerText = GetTextColor(group.Key);
+
+            <div class="col">
+                <div class="card shadow-sm border-0 rounded-3 overflow-hidden h-100 bg-white">
+                    <div class="card-header border-0 px-3 py-2 fw-bold" style="background-color: @headerBg; color: @headerText; font-size: 0.9rem;">
+                        Group @group.Key
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3" style="width: 45px;">Pos</th>
+                                    <th>Team</th>
+                                    <th class="text-center" style="width: 45px;">GD</th>
+                                    <th class="text-center pe-3" style="width: 45px;">Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < group.Value.Count; i++)
+                                {
+                                    var standing = group.Value[i];
+                                    <tr style="@(i < 2 ? "background-color: #f7fff9;" : "")">
+                                        <td class="fw-bold ps-3 text-muted">@(i + 1)</td>
+                                        <td class="fw-semibold text-truncate" style="max-width: 120px;">
+                                            <img src="@GetFlagUrl(standing.Team.Name)" class="rounded shadow-sm me-2" style="width: 22px; height: 14px; object-fit: cover;" alt="" />
+                                            @standing.Team.Name
+                                        </td>
+                                        <td class="text-center text-muted">@standing.GoalDifference</td>
+                                        <td class="text-center fw-bold pe-3">@standing.Points</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <hr class="my-5" />
+
+    <h2 class="section-title mb-4">🏆 Knockout Stage</h2>
+    
+    <div class="bracket-wrapper border rounded-3 bg-white p-4 shadow-sm mb-5">
+        <div class="theme-bracket">
+            
+            <div class="bracket-round">
+                <div class="round-absolute-header">R32</div>
+                @for (int i = 1; i <= 8; i++)
+                {
+                    <div class="match-pair">
+                        <div class="bracket-match">
+                            <div class="tbd-team">⬜ TBD</div>
+                            <div class="border-divider"></div>
+                            <div class="tbd-team">⬜ TBD</div>
+                        </div>
+                        <div class="bracket-match">
+                            <div class="tbd-team">⬜ TBD</div>
+                            <div class="border-divider"></div>
+                            <div class="tbd-team">⬜ TBD</div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="bracket-round">
+                <div class="round-absolute-header">R16</div>
+                @for (int i = 1; i <= 4; i++)
+                {
+                    <div class="match-pair">
+                        <div class="bracket-match">
+                            <div class="tbd-team">⬜ TBD</div>
+                            <div class="border-divider"></div>
+                            <div class="tbd-team">⬜ TBD</div>
+                        </div>
+                        <div class="bracket-match">
+                            <div class="tbd-team">⬜ TBD</div>
+                            <div class="border-divider"></div>
+                            <div class="tbd-team">⬜ TBD</div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="bracket-round">
+                <div class="round-absolute-header">QF</div>
+                @for (int i = 1; i <= 2; i++)
+                {
+                    <div class="match-pair">
+                        <div class="bracket-match">
+                            <div class="tbd-team">⬜ TBD</div>
+                            <div class="border-divider"></div>
+                            <div class="tbd-team">⬜ TBD</div>
+                        </div>
+                        <div class="bracket-match">
+                            <div class="tbd-team">⬜ TBD</div>
+                            <div class="border-divider"></div>
+                            <div class="tbd-team">⬜ TBD</div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="bracket-round">
+                <div class="round-absolute-header">SF</div>
+                <div class="match-pair">
+                    <div class="bracket-match">
+                        <div class="tbd-team">⬜ TBD</div>
+                        <div class="border-divider"></div>
+                        <div class="tbd-team">⬜ TBD</div>
+                    </div>
+                    <div class="bracket-match">
+                        <div class="tbd-team">⬜ TBD</div>
+                        <div class="border-divider"></div>
+                        <div class="tbd-team">⬜ TBD</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bracket-round">
+                <div class="round-absolute-header final-absolute-header">Fin / 3rd</div>
+                
+                <div class="bracket-match final-box">
+                    <div class="tbd-team" style="color: #6A0dad; font-weight: 700;">🏆 TBD</div>
+                    <div class="border-top my-2" style="border-top-color: #e8dbff !important;"></div>
+                    <div class="tbd-team" style="color: #6A0dad; font-weight: 700;">🏆 TBD</div>
+                </div>
+
+                <div class="bracket-match third-place-box" style="border: 1px dashed #cbd5e1; background-color: #f8fafc;">
+                    <div class="fw-semibold mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; line-height: 1;">3rd Place Match</div>
+                    <div class="tbd-team">🥉 TBD</div>
+                    <div class="border-divider" style="margin: 4px 0;"></div>
+                    <div class="tbd-team">🥉 TBD</div>
+                </div>
+            </div>
+
+            <div class="bracket-round">
+                <div class="round-absolute-header winner-absolute-header">Podium</div>
+                
+                <div class="bracket-match podium-box gold-box" style="border: 2px solid #d4af37; background-color: #fffdf5; color: #b58900;">
+                    🥇 1st: TBD
+                </div>
+
+                <div class="bracket-match podium-box silver-box" style="border: 2px solid #aaa9ad; background-color: #fcfcfc; color: #71717a;">
+                    🥈 2nd: TBD
+                </div>
+
+                <div class="bracket-match podium-box bronze-box" style="border: 2px solid #cd7f32; background-color: #fffbf7; color: #a0522d;">
+                    🥉 3rd: TBD
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
