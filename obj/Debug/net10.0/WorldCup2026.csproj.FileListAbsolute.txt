@@ -225,5 +225,7 @@ C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\WorldCup2026.pdb
 C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\WorldCup2026.genruntimeconfig.cache
 C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\ref\WorldCup2026.dll
 C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\compressed\a5yzvzg1r8-{0}-oeqqt2c7of-oeqqt2c7of.gz
-C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\compressed\js4eppp76v-{0}-4wzx8mvjy8-4wzx8mvjy8.gz
-C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\compressed\4ht7wq295k-{0}-b7wykpvsa0-b7wykpvsa0.gz
+C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\compressed\4j8olarzzx-{0}-6fn5yszoex-6fn5yszoex.gz
+C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\compressed\j1cfn73q97-{0}-rq5ono00kl-rq5ono00kl.gz
+C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\compressed\js4eppp76v-{0}-u6531ayd84-u6531ayd84.gz
+C:\Users\Ilko\WorldCupProject\WorldCup2026\obj\Debug\net10.0\compressed\4ht7wq295k-{0}-8p66jur6ab-8p66jur6ab.gz

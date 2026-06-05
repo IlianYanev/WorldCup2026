@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/Chreed-ExtraBold.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body { 
     background-color: #fdfdfd; 
     position: relative;
@@ -71,9 +78,19 @@ body::after {
 }
 
 .navbar-brand {
+    font-family: 'MyCustomFont', sans-serif;
     font-weight: 800;
-    letter-spacing: 0.5px;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
     color: #ffffff !important;
+    text-transform: uppercase;
+}
+
+.navbar-brand img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
 }
 
 .navbar-nav .nav-link {
@@ -95,7 +112,24 @@ body::after {
     z-index: 5;
 }
 
-.section-title { font-weight: 800; border-left: 5px solid #0052B4; padding-left: 12px; color: #1e2530; font-size: 1.6rem; }
+.main-title {
+    font-family: 'MyCustomFont', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-title { 
+    font-family: 'MyCustomFont', sans-serif;
+    font-weight: 800; 
+    border-left: 5px solid #0052B4; 
+    padding-left: 12px; 
+    color: #1e2530; 
+    font-size: 1.8rem; 
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 .table th { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px; }
 .table td { padding: 6px 8px; font-size: 0.9rem; }
 
@@ -116,9 +150,10 @@ body::after {
     left: 0;
     width: 100%;
     text-align: center;
+    font-family: 'MyCustomFont', sans-serif;
     font-weight: 800;
     color: #1e2530;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     border-bottom: 2px solid #edf2f7;
