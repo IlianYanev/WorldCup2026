@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "z1PIb5XdENM=",
+  "dgSpecHash": "ZNFa9PoxuLc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ilko\\WorldCupProject\\WorldCup2026\\WorldCup2026.csproj",
+  "projectFilePath": "C:\\Users\\Ilko\\WorldCup2026\\WorldCup2026.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ilko\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\Ilko\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",

@@ -1,8 +1,11 @@
 @font-face {
-    font-family: 'MyCustomFont';
-    src: url('../fonts/Chreed-ExtraBold.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+    font-family: 'Chreed-ExtraBold';
+    src: url('/fonts/Chreed-ExtraBold.ttf');
+}
+
+.custom-header {
+    font-family: 'Chreed-ExtraBold', sans-serif;
+    color: #0052B4;
 }
 
 body { 
@@ -236,3 +239,4 @@ body::after {
 
 .tbd-team { color: #a0aec0; font-style: italic; font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; height: 26px; }
 .border-divider { border-top: 1px solid #edf2f7; margin: 6px 0; }
+

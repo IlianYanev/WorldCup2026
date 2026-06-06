@@ -32,6 +32,25 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    
+    var adminUser = context.Users.FirstOrDefault(u => u.Username == "admin");
+    if (adminUser == null)
+    {
+        context.Users.Add(new WorldCup2026.Models.User
+        {
+            Username = "admin",
+            Email = "admin@worldcup2026.com",
+            PasswordHash = "123",
+            Role = "Admin"
+        });
+        context.SaveChanges();
+    }
+}
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

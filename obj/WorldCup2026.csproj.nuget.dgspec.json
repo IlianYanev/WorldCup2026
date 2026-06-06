@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ilko\\WorldCupProject\\WorldCup2026\\WorldCup2026.csproj": {}
+    "C:\\Users\\Ilko\\WorldCup2026\\WorldCup2026.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ilko\\WorldCupProject\\WorldCup2026\\WorldCup2026.csproj": {
+    "C:\\Users\\Ilko\\WorldCup2026\\WorldCup2026.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ilko\\WorldCupProject\\WorldCup2026\\WorldCup2026.csproj",
+        "projectUniqueName": "C:\\Users\\Ilko\\WorldCup2026\\WorldCup2026.csproj",
         "projectName": "WorldCup2026",
-        "projectPath": "C:\\Users\\Ilko\\WorldCupProject\\WorldCup2026\\WorldCup2026.csproj",
+        "projectPath": "C:\\Users\\Ilko\\WorldCup2026\\WorldCup2026.csproj",
         "packagesPath": "C:\\Users\\Ilko\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ilko\\WorldCupProject\\WorldCup2026\\obj\\",
+        "outputPath": "C:\\Users\\Ilko\\WorldCup2026\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Ilko\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -1,0 +1,107 @@
+@model IEnumerable<WorldCup2026.Models.Team>
+@{
+    ViewData["Title"] = "Group Predictor";
+
+    var countryCodes = new Dictionary<string, string>
+    {
+        {"Mexico", "mx"}, {"South Africa", "za"}, {"South Korea", "kr"}, {"Czech Republic", "cz"},
+        {"Canada", "ca"}, {"Bosnia and Herzegovina", "ba"}, {"Qatar", "qa"}, {"Switzerland", "ch"},
+        {"Brazil", "br"}, {"Morocco", "ma"}, {"Haiti", "ht"}, {"Scotland", "gb-sct"},
+        {"USA", "us"}, {"Paraguay", "py"}, {"Australia", "au"}, {"Turkey", "tr"},
+        {"Germany", "de"}, {"Curacao", "cw"}, {"Ivory Coast", "ci"}, {"Ecuador", "ec"},
+        {"Netherlands", "nl"}, {"Japan", "jp"}, {"Sweden", "se"}, {"Tunisia", "tn"},
+        {"Spain", "es"}, {"Cape Verde", "cv"}, {"Belgium", "be"}, {"Egypt", "eg"},
+        {"Saudi Arabia", "sa"}, {"Uruguay", "uy"}, {"Iran", "ir"}, {"New Zealand", "nz"},
+        {"France", "fr"}, {"Senegal", "sn"}, {"Iraq", "iq"}, {"Norway", "no"},
+        {"Argentina", "ar"}, {"Algeria", "dz"}, {"Austria", "at"}, {"Jordan", "jo"},
+        {"Portugal", "pt"}, {"DR Congo", "cd"}, {"Uzbekistan", "uz"}, {"Colombia", "co"},
+        {"England", "gb-eng"}, {"Croatia", "hr"}, {"Ghana", "gh"}, {"Panama", "pa"}
+    };
+
+    var groupColors = new Dictionary<string, string>
+    {
+        {"A", "#6A0dad"}, {"B", "#0052B4"}, {"C", "#00B2A9"}, {"D", "#FF4500"},
+        {"E", "#007A33"}, {"F", "#E10600"}, {"G", "#9EFD38"}, {"H", "#FF1493"},
+        {"I", "#38B6FF"}, {"J", "#8B0000"}, {"K", "#FFA07A"}, {"L", "#111111"}
+    };
+
+    string GetFlagUrl(string countryName) => countryCodes.ContainsKey(countryName) ? $"https://flagcdn.com/w40/{countryCodes[countryName]}.png" : "https://placehold.co/40x30?text=⚽";
+    string GetGroupColor(string groupLetter) => groupColors.ContainsKey(groupLetter) ? groupColors[groupLetter] : "#212529";
+    string GetTextColor(string groupLetter) => (groupLetter == "G" || groupLetter == "K") ? "#111111" : "#FFFFFF";
+}
+
+<link rel="stylesheet" href="~/css/standings.css" />
+
+<div class="container-fluid mt-4 px-4">
+    <div class="text-center mb-4">
+        <h1 class="mb-2" style="font-family: 'Chreed-ExtraBold', sans-serif; color: #0052B4; font-size: 3rem;">WORLD CUP 2026 PREDICTOR</h1>
+        <p class="text-muted" style="max-width: 650px; margin: 0 auto; font-size: 1.1rem;">
+            Drag & Drop to arrange the teams in each group based on your predictions for the final standings. 
+            Points will be awarded automatically at the end of the tournament based on how accurately your predicted positions match the real results.
+        </p>
+    </div>
+
+    <form id="predictionForm" asp-controller="Predictor" asp-action="SavePredictions" method="post">
+        <div class="row">
+            @foreach (var group in Model.GroupBy(t => t.GroupLetter).OrderBy(g => g.Key))
+            {
+                <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-header fw-bold d-flex justify-content-between align-items-center" 
+                             style="background-color: @GetGroupColor(group.Key.ToString()); color: @GetTextColor(group.Key.ToString());">
+                            <span>Group @group.Key</span>
+                        </div>
+                        <div class="card-body p-0">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="px-3">Team</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="sortable-group" data-group="@group.Key">
+                                    @foreach (var team in group)
+                                    {
+                                        <tr class="sortable-item" data-id="@team.Id">
+                                            <td class="px-3">
+                                                <span class="handle me-2" style="cursor: grab; color: #adb5bd;">☰</span>
+                                                <img src="@GetFlagUrl(team.Name)" alt="@team.Name" width="25" class="me-2 shadow-sm rounded-1" />
+                                                @team.Name
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <input type="hidden" name="groupOrders" id="groupOrdersData" />
+        <div class="text-center mt-3 mb-5">
+            <button type="submit" class="btn btn-primary btn-lg shadow-sm px-5">Confirm</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+    document.querySelectorAll('.sortable-group').forEach(tbody => {
+        new Sortable(tbody, {
+            animation: 150,
+            handle: '.handle',
+            ghostClass: 'table-active'
+        });
+    });
+
+    document.getElementById('predictionForm').onsubmit = function() {
+        let results = {};
+        document.querySelectorAll('.sortable-group').forEach(tbody => {
+            let group = tbody.getAttribute('data-group');
+            let ids = Array.from(tbody.querySelectorAll('.sortable-item'))
+                           .map(tr => tr.getAttribute('data-id'));
+            results[group] = ids.join(',');
+        });
+        document.getElementById('groupOrdersData').value = JSON.stringify(results);
+    };
+</script>

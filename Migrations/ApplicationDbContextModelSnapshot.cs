@@ -22,6 +22,30 @@ namespace WorldCup2026.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("WorldCup2026.Models.GroupPrediction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PredictedPosition")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("GroupPredictions");
+                });
+
             modelBuilder.Entity("WorldCup2026.Models.Match", b =>
                 {
                     b.Property<int>("Id")
@@ -1048,18 +1072,6 @@ namespace WorldCup2026.Migrations
                         },
                         new
                         {
-                            Id = 25,
-                            GroupLetter = "G",
-                            Name = "Spain"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            GroupLetter = "G",
-                            Name = "Cape Verde"
-                        },
-                        new
-                        {
                             Id = 27,
                             GroupLetter = "G",
                             Name = "Belgium"
@@ -1069,6 +1081,18 @@ namespace WorldCup2026.Migrations
                             Id = 28,
                             GroupLetter = "G",
                             Name = "Egypt"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            GroupLetter = "G",
+                            Name = "Iran"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            GroupLetter = "G",
+                            Name = "New Zealand"
                         },
                         new
                         {
@@ -1084,15 +1108,15 @@ namespace WorldCup2026.Migrations
                         },
                         new
                         {
-                            Id = 31,
+                            Id = 25,
                             GroupLetter = "H",
-                            Name = "Iran"
+                            Name = "Spain"
                         },
                         new
                         {
-                            Id = 32,
+                            Id = 26,
                             GroupLetter = "H",
-                            Name = "New Zealand"
+                            Name = "Cape Verde"
                         },
                         new
                         {
@@ -1221,10 +1245,21 @@ namespace WorldCup2026.Migrations
                         {
                             Id = 1,
                             Email = "admin@worldcup2026.com",
-                            PasswordHash = "$2a$11$6pD4R7Zp4M1i8gE6fXm9UeZ8G5vK0T4vJ7yL0f6R2z4A5wS6n3B6e",
+                            PasswordHash = "123",
                             Role = "Admin",
                             Username = "admin"
                         });
+                });
+
+            modelBuilder.Entity("WorldCup2026.Models.GroupPrediction", b =>
+                {
+                    b.HasOne("WorldCup2026.Models.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("WorldCup2026.Models.Match", b =>

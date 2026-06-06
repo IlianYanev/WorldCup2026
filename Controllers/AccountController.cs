@@ -33,7 +33,7 @@ namespace WorldCup2026.Controllers
             {
                 Username = username,
                 Email = email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+                PasswordHash = password,
                 Role = "User"
             };
 
@@ -51,7 +51,7 @@ namespace WorldCup2026.Controllers
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            if (user == null || user.PasswordHash != password)
             {
                 ModelState.AddModelError("", "Invalid username or password.");
                 return View();

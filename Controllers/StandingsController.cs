@@ -17,53 +17,24 @@ namespace WorldCup2026.Controllers
         public async Task<IActionResult> Index()
         {
             var teams = await _context.Teams.ToListAsync();
-            var matches = await _context.Matches.Where(m => m.Status == "Finished").ToListAsync();
+            var viewModel = new GroupStandingsViewModel();
 
-            var standingsMap = teams.ToDictionary(
-                t => t.Id,
-                t => new TeamStandingViewModel { Team = t, Points = 0, GoalDifference = 0 }
-            );
+            var groupedTeams = teams.GroupBy(t => t.GroupLetter).OrderBy(g => g.Key);
 
-            foreach (var match in matches)
+            foreach (var group in groupedTeams)
             {
-                if (!match.HomeScore.HasValue || !match.AwayScore.HasValue) continue;
-
-                var homeId = match.HomeTeamId;
-                var awayId = match.AwayTeamId;
-                var homeScore = match.HomeScore.Value;
-                var awayScore = match.AwayScore.Value;
-
-                standingsMap[homeId].GoalDifference += (homeScore - awayScore);
-                standingsMap[awayId].GoalDifference += (awayScore - homeScore);
-
-                if (homeScore > awayScore)
+                var standingsList = new List<TeamStandingViewModel>();
+                foreach (var team in group)
                 {
-                    standingsMap[homeId].Points += 3;
+                    standingsList.Add(new TeamStandingViewModel
+                    {
+                        Team = team,
+                        Points = 0,
+                        GoalDifference = 0
+                    });
                 }
-                else if (awayScore > homeScore)
-                {
-                    standingsMap[awayId].Points += 3;
-                }
-                else
-                {
-                    standingsMap[homeId].Points += 1;
-                    standingsMap[awayId].Points += 1;
-                }
+                viewModel.Groups.Add(group.Key, standingsList);
             }
-
-            var groupedStandings = standingsMap.Values
-                .GroupBy(s => s.Team.GroupLetter)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.OrderByDescending(s => s.Points)
-                          .ThenByDescending(s => s.GoalDifference)
-                          .ToList()
-                );
-
-            var viewModel = new GroupStandingsViewModel
-            {
-                Groups = groupedStandings
-            };
 
             return View(viewModel);
         }
