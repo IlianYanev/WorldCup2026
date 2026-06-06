@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WorldCup2026")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b0950ae7dbae337a6e1e5471b10e3318d3e23277")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e898fc85fd859310956c1eaac22c4fcde7569f8a")]
 [assembly: System.Reflection.AssemblyProductAttribute("WorldCup2026")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WorldCup2026")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

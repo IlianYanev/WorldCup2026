@@ -3,6 +3,13 @@
     src: url('/fonts/Chreed-ExtraBold.ttf');
 }
 
+
+.custom-header {
+    font-family: 'Chreed-ExtraBold', sans-serif;
+    color: #0052B4;
+    font-size: 3rem;
+}
+
 .custom-header {
     font-family: 'Chreed-ExtraBold', sans-serif;
     color: #0052B4;

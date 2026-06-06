@@ -15,6 +15,7 @@ namespace WorldCup2026.Data
         public DbSet<Match> Matches { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<GroupPrediction> GroupPredictions { get; set; }
+        public DbSet<ThirdPlacePrediction> ThirdPlacePredictions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,7 +66,7 @@ namespace WorldCup2026.Data
                 new Team { Id = 24, Name = "Tunisia", GroupLetter = "F" },
                 new Team { Id = 27, Name = "Belgium", GroupLetter = "G" },
                 new Team { Id = 28, Name = "Egypt", GroupLetter = "G" },
-                 new Team { Id = 31, Name = "Iran", GroupLetter = "G" },
+                new Team { Id = 31, Name = "Iran", GroupLetter = "G" },
                 new Team { Id = 32, Name = "New Zealand", GroupLetter = "G" },
                 new Team { Id = 29, Name = "Saudi Arabia", GroupLetter = "H" },
                 new Team { Id = 30, Name = "Uruguay", GroupLetter = "H" },
@@ -183,13 +184,13 @@ namespace WorldCup2026.Data
                 new Match { Id = 72, HomeTeamId = 46, AwayTeamId = 47, StadiumId = 8, KickOffTime = DateTime.Parse("2026-07-03T22:00:00"), Status = "Scheduled" }
             );
 
-           modelBuilder.Entity<User>().HasData(
+            modelBuilder.Entity<User>().HasData(
                 new User
                 {
                     Id = 1,
                     Username = "admin",
                     Email = "admin@worldcup2026.com",
-                    PasswordHash = "123", // Променено на чист текст!
+                    PasswordHash = "123",
                     Role = "Admin"
                 }
             );

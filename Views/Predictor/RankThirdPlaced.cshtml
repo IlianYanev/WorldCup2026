@@ -1,0 +1,80 @@
+@model IEnumerable<WorldCup2026.Models.Team>
+@{
+    ViewData["Title"] = "Rank Best 3rd-Placed Teams";
+
+    var countryCodes = new Dictionary<string, string>
+    {
+        {"Mexico", "mx"}, {"South Africa", "za"}, {"South Korea", "kr"}, {"Czech Republic", "cz"},
+        {"Canada", "ca"}, {"Bosnia and Herzegovina", "ba"}, {"Qatar", "qa"}, {"Switzerland", "ch"},
+        {"Brazil", "br"}, {"Morocco", "ma"}, {"Haiti", "ht"}, {"Scotland", "gb-sct"},
+        {"USA", "us"}, {"Paraguay", "py"}, {"Australia", "au"}, {"Turkey", "tr"},
+        {"Germany", "de"}, {"Curacao", "cw"}, {"Ivory Coast", "ci"}, {"Ecuador", "ec"},
+        {"Netherlands", "nl"}, {"Japan", "jp"}, {"Sweden", "se"}, {"Tunisia", "tn"},
+        {"Spain", "es"}, {"Cape Verde", "cv"}, {"Belgium", "be"}, {"Egypt", "eg"},
+        {"Saudi Arabia", "sa"}, {"Uruguay", "uy"}, {"Iran", "ir"}, {"New Zealand", "nz"},
+        {"France", "fr"}, {"Senegal", "sn"}, {"Iraq", "iq"}, {"Norway", "no"},
+        {"Argentina", "ar"}, {"Algeria", "dz"}, {"Austria", "at"}, {"Jordan", "jo"},
+        {"Portugal", "pt"}, {"DR Congo", "cd"}, {"Uzbekistan", "uz"}, {"Colombia", "co"},
+        {"England", "gb-eng"}, {"Croatia", "hr"}, {"Ghana", "gh"}, {"Panama", "pa"}
+    };
+
+    string GetFlagUrl(string countryName) => countryCodes.ContainsKey(countryName) ? $"https://flagcdn.com/w40/{countryCodes[countryName]}.png" : "https://placehold.co/40x30?text=⚽";
+}
+
+<style>
+    .custom-header { font-family: 'Chreed-ExtraBold', sans-serif; color: #0052B4; font-size: 2.5rem; }
+</style>
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="custom-header">RANK BEST 3RD-PLACED TEAMS</h1>
+        <p class="text-muted">Drag and drop the teams to rank them by performance. The top 8 will advance to the Round of 32.</p>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            No 3rd-placed teams found. Please go back to the Groups page and save your predictions.
+        </div>
+        <div class="text-center">
+            <a asp-controller="Predictor" asp-action="Index" class="btn btn-primary">Back to Groups</a>
+        </div>
+    }
+    else
+    {
+        <form id="rankForm" asp-controller="Predictor" asp-action="SaveThirdPlacedRankings" method="post">
+            <div class="card shadow-sm border-0 mx-auto" style="max-width: 500px;">
+                <div class="card-header bg-primary text-white fw-bold">Ranked 3rd-Placed Teams</div>
+                <ul class="list-group list-group-flush sortable-third" id="thirdList" style="min-height: 100px;">
+                    @foreach (var team in Model)
+                    {
+                        <li class="list-group-item d-flex align-items-center" data-id="@team.Id" style="cursor: default;">
+                            <span class="handle me-3" style="cursor: grab; color: #adb5bd;">☰</span>
+                            <img src="@GetFlagUrl(team.Name)" width="30" class="me-3 shadow-sm rounded-1" alt="@team.Name" />
+                            @team.Name
+                        </li>
+                    }
+                </ul>
+            </div>
+            
+            <input type="hidden" name="rankedIds" id="rankedIdsData" />
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success btn-lg px-5">Confirm Rankings</button>
+            </div>
+        </form>
+    }
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+    new Sortable(document.getElementById('thirdList'), {
+        animation: 150,
+        handle: '.handle'
+    });
+
+    document.getElementById('rankForm').onsubmit = function() {
+        let ids = Array.from(document.querySelectorAll('#thirdList .list-group-item'))
+                       .map(li => li.getAttribute('data-id'));
+        document.getElementById('rankedIdsData').value = ids.join(',');
+    };
+</script>

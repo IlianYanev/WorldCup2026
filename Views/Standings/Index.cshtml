@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Standings & Brackets";
-
+    
     var countryCodes = new Dictionary<string, string>
     {
         {"Mexico", "mx"}, {"South Africa", "za"}, {"South Korea", "kr"}, {"Czech Republic", "cz"},
@@ -80,121 +80,5 @@
                 </div>
             </div>
         }
-    </div>
-
-    <hr class="my-5" />
-
-    <h2 class="section-title mb-4">🏆 Knockout Stage</h2>
-    
-    <div class="bracket-wrapper border rounded-3 bg-white p-4 shadow-sm mb-5">
-        <div class="theme-bracket">
-            
-            <div class="bracket-round">
-                <div class="round-absolute-header">R32</div>
-                @for (int i = 1; i <= 8; i++)
-                {
-                    <div class="match-pair">
-                        <div class="bracket-match">
-                            <div class="tbd-team">⬜ TBD</div>
-                            <div class="border-divider"></div>
-                            <div class="tbd-team">⬜ TBD</div>
-                        </div>
-                        <div class="bracket-match">
-                            <div class="tbd-team">⬜ TBD</div>
-                            <div class="border-divider"></div>
-                            <div class="tbd-team">⬜ TBD</div>
-                        </div>
-                    </div>
-                }
-            </div>
-
-            <div class="bracket-round">
-                <div class="round-absolute-header">R16</div>
-                @for (int i = 1; i <= 4; i++)
-                {
-                    <div class="match-pair">
-                        <div class="bracket-match">
-                            <div class="tbd-team">⬜ TBD</div>
-                            <div class="border-divider"></div>
-                            <div class="tbd-team">⬜ TBD</div>
-                        </div>
-                        <div class="bracket-match">
-                            <div class="tbd-team">⬜ TBD</div>
-                            <div class="border-divider"></div>
-                            <div class="tbd-team">⬜ TBD</div>
-                        </div>
-                    </div>
-                }
-            </div>
-
-            <div class="bracket-round">
-                <div class="round-absolute-header">QF</div>
-                @for (int i = 1; i <= 2; i++)
-                {
-                    <div class="match-pair">
-                        <div class="bracket-match">
-                            <div class="tbd-team">⬜ TBD</div>
-                            <div class="border-divider"></div>
-                            <div class="tbd-team">⬜ TBD</div>
-                        </div>
-                        <div class="bracket-match">
-                            <div class="tbd-team">⬜ TBD</div>
-                            <div class="border-divider"></div>
-                            <div class="tbd-team">⬜ TBD</div>
-                        </div>
-                    </div>
-                }
-            </div>
-
-            <div class="bracket-round">
-                <div class="round-absolute-header">SF</div>
-                <div class="match-pair">
-                    <div class="bracket-match">
-                        <div class="tbd-team">⬜ TBD</div>
-                        <div class="border-divider"></div>
-                        <div class="tbd-team">⬜ TBD</div>
-                    </div>
-                    <div class="bracket-match">
-                        <div class="tbd-team">⬜ TBD</div>
-                        <div class="border-divider"></div>
-                        <div class="tbd-team">⬜ TBD</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bracket-round">
-                <div class="round-absolute-header final-absolute-header">Fin / 3rd</div>
-                
-                <div class="bracket-match final-box">
-                    <div class="tbd-team" style="color: #6A0dad; font-weight: 700;">🏆 TBD</div>
-                    <div class="border-top my-2" style="border-top-color: #e8dbff !important;"></div>
-                    <div class="tbd-team" style="color: #6A0dad; font-weight: 700;">🏆 TBD</div>
-                </div>
-
-                <div class="bracket-match third-place-box" style="border: 1px dashed #cbd5e1; background-color: #f8fafc;">
-                    <div class="fw-semibold mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; line-height: 1;">3rd Place Match</div>
-                    <div class="tbd-team">🥉 TBD</div>
-                    <div class="border-divider" style="margin: 4px 0;"></div>
-                    <div class="tbd-team">🥉 TBD</div>
-                </div>
-            </div>
-
-            <div class="bracket-round">
-                <div class="round-absolute-header winner-absolute-header">Podium</div>
-                
-                <div class="bracket-match podium-box gold-box" style="border: 2px solid #d4af37; background-color: #fffdf5; color: #b58900;">
-                    🥇 1st: TBD
-                </div>
-
-                <div class="bracket-match podium-box silver-box" style="border: 2px solid #aaa9ad; background-color: #fcfcfc; color: #71717a;">
-                    🥈 2nd: TBD
-                </div>
-
-                <div class="bracket-match podium-box bronze-box" style="border: 2px solid #cd7f32; background-color: #fffbf7; color: #a0522d;">
-                    🥉 3rd: TBD
-                </div>
-            </div>
-
-        </div>
     </div>
 </div>
