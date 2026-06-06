@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'MyCustomFont';
-    src: url('../fonts/Chreed-ExtraBold.ttf') format('opentype');
+    src: url('../fonts/Chreed-ExtraBold.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -142,8 +142,6 @@ body::after {
 }
 
 .day-header {
-    font-family: 'MyCustomFont', sans-serif;
-    font-weight: 700;
     color: #212529;
     position: relative;
     display: inline-block;
@@ -158,11 +156,4 @@ body::after {
     height: 4px;
     background-color: #0052B4;
     border-radius: 2px;
-}
-
-.home-section-title {
-    font-family: 'MyCustomFont', sans-serif;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }

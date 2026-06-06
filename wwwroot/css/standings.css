@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'MyCustomFont';
-    src: url('../fonts/Chreed-ExtraBold.ttf') format('opentype');
+    src: url('../fonts/Chreed-ExtraBold.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -120,7 +120,6 @@ body::after {
 }
 
 .section-title { 
-    font-family: 'MyCustomFont', sans-serif;
     font-weight: 800; 
     border-left: 5px solid #0052B4; 
     padding-left: 12px; 
@@ -150,7 +149,6 @@ body::after {
     left: 0;
     width: 100%;
     text-align: center;
-    font-family: 'MyCustomFont', sans-serif;
     font-weight: 800;
     color: #1e2530;
     font-size: 1.3rem;

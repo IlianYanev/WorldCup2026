@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WorldCup2026.Data;
+using WorldCup2026.Models;
 
 namespace WorldCup2026.Controllers
 {
@@ -23,6 +26,39 @@ namespace WorldCup2026.Controllers
                 .ToListAsync();
 
             return View(matches);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var match = await _context.Matches.FindAsync(id);
+            if (match == null) return NotFound();
+            return View(match);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, int? homeScore, int? awayScore)
+        {
+            var match = await _context.Matches.FindAsync(id);
+            if (match == null) return NotFound();
+
+            match.HomeScore = homeScore;
+            match.AwayScore = awayScore;
+
+            if (homeScore.HasValue && awayScore.HasValue)
+            {
+                match.Status = "Finished";
+            }
+            else
+            {
+                match.Status = "Scheduled";
+            }
+
+            _context.Update(match);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
