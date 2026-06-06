@@ -16,6 +16,7 @@ namespace WorldCup2026.Data
         public DbSet<User> Users { get; set; }
         public DbSet<GroupPrediction> GroupPredictions { get; set; }
         public DbSet<ThirdPlacePrediction> ThirdPlacePredictions { get; set; }
+        public DbSet<KnockoutPrediction> KnockoutPredictions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

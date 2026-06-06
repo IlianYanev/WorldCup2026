@@ -1,0 +1,73 @@
+@{
+    ViewData["Title"] = "Tournament Results";
+    var gold = (WorldCup2026.Models.Team)ViewBag.Gold;
+    var silver = (WorldCup2026.Models.Team)ViewBag.Silver;
+    var bronze = (WorldCup2026.Models.Team)ViewBag.Bronze;
+
+    // Речник със съответствията за флаговете
+    var countryCodes = new Dictionary<string, string> {
+        {"Mexico", "mx"}, {"South Africa", "za"}, {"South Korea", "kr"}, {"Czech Republic", "cz"},
+        {"Canada", "ca"}, {"Bosnia and Herzegovina", "ba"}, {"Qatar", "qa"}, {"Switzerland", "ch"},
+        {"Brazil", "br"}, {"Morocco", "ma"}, {"Haiti", "ht"}, {"Scotland", "gb-sct"},
+        {"USA", "us"}, {"Paraguay", "py"}, {"Australia", "au"}, {"Turkey", "tr"},
+        {"Germany", "de"}, {"Curacao", "cw"}, {"Ivory Coast", "ci"}, {"Ecuador", "ec"},
+        {"Netherlands", "nl"}, {"Japan", "jp"}, {"Sweden", "se"}, {"Tunisia", "tn"},
+        {"Spain", "es"}, {"Cape Verde", "cv"}, {"Belgium", "be"}, {"Egypt", "eg"},
+        {"Saudi Arabia", "sa"}, {"Uruguay", "uy"}, {"Iran", "ir"}, {"New Zealand", "nz"},
+        {"France", "fr"}, {"Senegal", "sn"}, {"Iraq", "iq"}, {"Norway", "no"},
+        {"Argentina", "ar"}, {"Algeria", "dz"}, {"Austria", "at"}, {"Jordan", "jo"},
+        {"Portugal", "pt"}, {"DR Congo", "cd"}, {"Uzbekistan", "uz"}, {"Colombia", "co"},
+        {"England", "gb-eng"}, {"Croatia", "hr"}, {"Ghana", "gh"}, {"Panama", "pa"}
+    };
+
+    string GetFlagUrl(string countryName) => countryCodes.ContainsKey(countryName) ? $"https://flagcdn.com/w40/{countryCodes[countryName]}.png" : "https://placehold.co/40x30?text=⚽";
+}
+
+<div class="container mt-5 text-center">
+    <h1 class="mb-5">TOURNAMENT WINNERS</h1>
+
+    <div class="row justify-content-center align-items-end">
+        <!-- 2nd Place -->
+        <div class="col-md-3">
+            <div class="card p-3" style="background-color: #f8f9fa; border: 3px solid #C0C0C0;">
+                <h4 class="text-muted">2nd Place</h4>
+                <h2>🥈</h2>
+                <h5>
+                    @if (silver != null) { <img src="@GetFlagUrl(silver.Name)" width="30" class="me-2" /> }
+                    @silver?.Name
+                    @if (silver != null) { <img src="@GetFlagUrl(silver.Name)" width="30" class="ms-2" /> }
+                </h5>
+            </div>
+        </div>
+
+        <!-- 1st Place -->
+        <div class="col-md-4">
+            <div class="card p-4 mb-4" style="background-color: #fff8e1; border: 5px solid #FFD700;">
+                <h3 class="text-warning">CHAMPION</h3>
+                <h1>🏆</h1>
+                <h4>
+                    @if (gold != null) { <img src="@GetFlagUrl(gold.Name)" width="40" class="me-2" /> }
+                    @gold?.Name
+                    @if (gold != null) { <img src="@GetFlagUrl(gold.Name)" width="40" class="ms-2" /> }
+                </h4>
+            </div>
+        </div>
+
+        <!-- 3rd Place -->
+        <div class="col-md-3">
+            <div class="card p-3" style="background-color: #fff4e6; border: 3px solid #CD7F32;">
+                <h4 class="text-muted">3rd Place</h4>
+                <h2>🥉</h2>
+                <h5>
+                    @if (bronze != null) { <img src="@GetFlagUrl(bronze.Name)" width="30" class="me-2" /> }
+                    @bronze?.Name
+                    @if (bronze != null) { <img src="@GetFlagUrl(bronze.Name)" width="30" class="ms-2" /> }
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <a asp-controller="Predictor" asp-action="Index" class="btn btn-primary btn-lg">Finish the prediction</a>
+    </div>
+</div>

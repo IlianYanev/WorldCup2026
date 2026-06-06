@@ -1,0 +1,127 @@
+@model List<WorldCup2026.Models.MatchViewModel>
+@{
+    string displayName = ViewBag.Stage switch
+    {
+        "R32" => "Round of 32",
+        "R16" => "Round of 16",
+        "QF" => "Quarter-Finals",
+        "SF" => "Semi-Finals",
+        "Final" => "Finals",
+        _ => ViewBag.Stage
+    };
+
+    ViewData["Title"] = "Knockout Stage";
+
+    var countryCodes = new Dictionary<string, string> {
+        {"Mexico", "mx"}, {"South Africa", "za"}, {"South Korea", "kr"}, {"Czech Republic", "cz"},
+        {"Canada", "ca"}, {"Bosnia and Herzegovina", "ba"}, {"Qatar", "qa"}, {"Switzerland", "ch"},
+        {"Brazil", "br"}, {"Morocco", "ma"}, {"Haiti", "ht"}, {"Scotland", "gb-sct"},
+        {"USA", "us"}, {"Paraguay", "py"}, {"Australia", "au"}, {"Turkey", "tr"},
+        {"Germany", "de"}, {"Curacao", "cw"}, {"Ivory Coast", "ci"}, {"Ecuador", "ec"},
+        {"Netherlands", "nl"}, {"Japan", "jp"}, {"Sweden", "se"}, {"Tunisia", "tn"},
+        {"Spain", "es"}, {"Cape Verde", "cv"}, {"Belgium", "be"}, {"Egypt", "eg"},
+        {"Saudi Arabia", "sa"}, {"Uruguay", "uy"}, {"Iran", "ir"}, {"New Zealand", "nz"},
+        {"France", "fr"}, {"Senegal", "sn"}, {"Iraq", "iq"}, {"Norway", "no"},
+        {"Argentina", "ar"}, {"Algeria", "dz"}, {"Austria", "at"}, {"Jordan", "jo"},
+        {"Portugal", "pt"}, {"DR Congo", "cd"}, {"Uzbekistan", "uz"}, {"Colombia", "co"},
+        {"England", "gb-eng"}, {"Croatia", "hr"}, {"Ghana", "gh"}, {"Panama", "pa"}
+    };
+
+    var groupColors = new Dictionary<string, string>
+    {
+        {"A", "#6A0dad"}, {"B", "#0052B4"}, {"C", "#00B2A9"}, {"D", "#FF4500"},
+        {"E", "#007A33"}, {"F", "#E10600"}, {"G", "#9EFD38"}, {"H", "#FF1493"},
+        {"I", "#38B6FF"}, {"J", "#8B0000"}, {"K", "#FFA07A"}, {"L", "#111111"}
+    };
+
+    string GetFlagUrl(string countryName) => countryCodes.ContainsKey(countryName) ? $"https://flagcdn.com/w40/{countryCodes[countryName]}.png" : "https://placehold.co/40x30?text=⚽";
+}
+
+<style>
+    .custom-header { font-family: 'Chreed-ExtraBold', sans-serif; color: #0052B4; }
+    .team-option { padding: 10px; border: 2px solid #e9ecef; cursor: pointer; border-radius: 5px; transition: 0.3s; }
+    .selected { color: white !important; font-weight: bold; border-color: transparent !important; }
+    .match-card-incomplete { border: 2px solid #dc3545 !important; }
+</style>
+
+<div class="container mt-4">
+    <h1 class="custom-header text-center mb-5">@displayName</h1>
+    
+    <form id="bracketForm" asp-action="SaveStage" method="post">
+        <input type="hidden" name="stage" value="@ViewBag.Stage" />
+        <input type="hidden" name="winnersJson" id="winnersJson" />
+
+        <div class="row g-3 justify-content-center">
+            @foreach (var match in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm border-0 h-100 match-card" data-match-id="@match.Id">
+                        <div class="card-header text-center fw-bold custom-header" style="background-color: #f8f9fa;">
+    @(match.Id == 103 ? "3RD PLACE PLAY-OFF" : (match.Id == 104 ? "GRAND FINAL" : "MATCH " + match.Id))
+</div>
+                        <div class="card-body p-2">
+                            <div class="team-option mb-2" data-team-id="@(match.Home?.Id ?? 0)" data-group="@(match.Home?.GroupLetter ?? "A")" 
+                                 onclick="selectWinner(this, @match.Id)">
+                                @if (match.Home != null) { <img src="@GetFlagUrl(match.Home.Name)" width="20" class="me-2" /> }
+                                @(match.Home?.Name ?? "TBD")
+                            </div>
+                            
+                            <div class="text-center fw-bold text-muted small">VS</div>
+                            
+                            <div class="team-option mt-2" data-team-id="@(match.Away?.Id ?? 0)" data-group="@(match.Away?.GroupLetter ?? "A")" 
+                                 onclick="selectWinner(this, @match.Id)">
+                                @if (match.Away != null) { <img src="@GetFlagUrl(match.Away.Name)" width="20" class="me-2" /> }
+                                @(match.Away?.Name ?? "TBD")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="text-center mt-5">
+            <button type="button" class="btn btn-primary btn-lg px-5" onclick="submitBracket()">
+                @(ViewBag.Stage == "Final" ? "Finish Tournament" : "Next Stage")
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const groupColors = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(groupColors));
+    let winners = {};
+
+    function selectWinner(el, matchId) {
+        el.parentElement.querySelectorAll('.team-option').forEach(o => {
+            o.classList.remove('selected');
+            o.style.backgroundColor = '';
+        });
+        
+        el.closest('.match-card').classList.remove('match-card-incomplete');
+        
+        const group = el.getAttribute('data-group');
+        const color = groupColors[group] || '#0d6efd';
+        
+        el.classList.add('selected');
+        el.style.backgroundColor = color;
+        
+        winners[matchId] = parseInt(el.getAttribute('data-team-id'), 10);
+    }
+
+    function submitBracket() {
+        const totalMatches = @Model.Count;
+        const selectedMatches = Object.keys(winners).length;
+
+        if (selectedMatches < totalMatches) {
+            alert(`Моля, избери победител за всички ${totalMatches} мача!`);
+            document.querySelectorAll('.match-card').forEach(card => {
+                const matchId = card.getAttribute('data-match-id');
+                if (!winners[matchId]) card.classList.add('match-card-incomplete');
+            });
+            return;
+        }
+
+        document.getElementById('winnersJson').value = JSON.stringify(winners);
+        document.getElementById('bracketForm').submit();
+    }
+</script>

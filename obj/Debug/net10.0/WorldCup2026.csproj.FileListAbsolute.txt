@@ -383,6 +383,7 @@ C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\scopedcss\bundle\WorldCup2026.style
 C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\scopedcss\projectbundle\WorldCup2026.bundle.scp.css
 C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\compressed\js4eppp76v-{0}-fznbrxwbq6-fznbrxwbq6.gz
 C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\compressed\w5ygxl4g7z-{0}-b9sayid5wm-b9sayid5wm.gz
+C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\compressed\4ht7wq295k-{0}-96ungnnshc-96ungnnshc.gz
 C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\compressed\s4wjtgzy88-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\compressed\j1cfn73q97-{0}-rq5ono00kl-rq5ono00kl.gz
 C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\compressed\dsnaew3fyt-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
@@ -459,4 +460,3 @@ C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\refint\WorldCup2026.dll
 C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\WorldCup2026.pdb
 C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\WorldCup2026.genruntimeconfig.cache
 C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\ref\WorldCup2026.dll
-C:\Users\Ilko\WorldCup2026\obj\Debug\net10.0\compressed\4ht7wq295k-{0}-2ws5hz8r3b-2ws5hz8r3b.gz

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Text.Json; // ВАЖНО: Трябва ти за десериализацията
+using System.Text.Json;
 using WorldCup2026.Data;
 using WorldCup2026.Models;
 
@@ -29,29 +29,29 @@ namespace WorldCup2026.Controllers
         {
             if (string.IsNullOrEmpty(groupOrders))
             {
-                return BadRequest("No predictions data received.");
+                return BadRequest();
             }
 
-            // Взимаме UserId от Claims
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("UserId");
             if (userIdClaim == null) return Unauthorized();
             var userId = int.Parse(userIdClaim.Value);
 
-            // Десериализираме JSON стринга към Dictionary
+            var oldPredictions = _context.GroupPredictions.Where(p => p.UserId == userId);
+            _context.GroupPredictions.RemoveRange(oldPredictions);
+
+            var oldThird = _context.ThirdPlacePredictions.Where(p => p.UserId == userId);
+            _context.ThirdPlacePredictions.RemoveRange(oldThird);
+
+            var oldKnockout = _context.KnockoutPredictions.Where(p => p.UserId == userId);
+            _context.KnockoutPredictions.RemoveRange(oldKnockout);
+
             var predictions = JsonSerializer.Deserialize<Dictionary<string, string>>(groupOrders);
 
             if (predictions != null)
             {
-                // Изчистваме старите прогнози за потребителя
-                var old = _context.GroupPredictions.Where(p => p.UserId == userId);
-                _context.GroupPredictions.RemoveRange(old);
-
-                // Записваме новите
                 foreach (var entry in predictions)
                 {
-                    string groupLetter = entry.Key;
                     string[] teamIds = entry.Value.Split(',');
-
                     for (int i = 0; i < teamIds.Length; i++)
                     {
                         if (int.TryParse(teamIds[i], out int teamId))
@@ -60,7 +60,7 @@ namespace WorldCup2026.Controllers
                             {
                                 UserId = userId,
                                 TeamId = teamId,
-                                PredictedPosition = i + 1 // 1, 2, 3, 4
+                                PredictedPosition = i + 1
                             });
                         }
                     }
@@ -76,15 +76,14 @@ namespace WorldCup2026.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("UserId");
             if (userIdClaim == null) return Unauthorized();
             var userId = int.Parse(userIdClaim.Value);
-            
-            // Взимаме само отборите, поставени на 3-то място
+
             var thirdPlaced = await _context.GroupPredictions
                 .Where(p => p.UserId == userId && p.PredictedPosition == 3)
                 .Include(p => p.Team)
                 .Select(p => p.Team)
                 .ToListAsync();
 
-            return View(thirdPlaced); 
+            return View(thirdPlaced);
         }
 
         [HttpPost]
@@ -112,7 +111,7 @@ namespace WorldCup2026.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Index", "Bracket");
         }
     }
 }
