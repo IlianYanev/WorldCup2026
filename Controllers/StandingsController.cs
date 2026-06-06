@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WorldCup2026.Data;
 using WorldCup2026.Models;
 
@@ -20,63 +17,52 @@ namespace WorldCup2026.Controllers
         public async Task<IActionResult> Index()
         {
             var teams = await _context.Teams.ToListAsync();
-            var matches = await _context.Matches
-                .Include(m => m.HomeTeam)
-                .Include(m => m.AwayTeam)
-                .ToListAsync();
+            var matches = await _context.Matches.Where(m => m.Status == "Finished").ToListAsync();
 
-            var standings = teams
-                .GroupBy(t => t.GroupLetter)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(t => new TeamStanding { Team = t }).ToList()
-                );
+            var standingsMap = teams.ToDictionary(
+                t => t.Id,
+                t => new TeamStandingViewModel { Team = t, Points = 0, GoalDifference = 0 }
+            );
 
-            foreach (var match in matches.Where(m => m.Status == "Finished" && m.HomeScore.HasValue && m.AwayScore.HasValue))
+            foreach (var match in matches)
             {
-                var homeStanding = standings[match.HomeTeam.GroupLetter].FirstOrDefault(s => s.Team.Id == match.HomeTeamId);
-                var awayStanding = standings[match.AwayTeam.GroupLetter].FirstOrDefault(s => s.Team.Id == match.AwayTeamId);
+                if (!match.HomeScore.HasValue || !match.AwayScore.HasValue) continue;
 
-                if (homeStanding != null && awayStanding != null)
+                var homeId = match.HomeTeamId;
+                var awayId = match.AwayTeamId;
+                var homeScore = match.HomeScore.Value;
+                var awayScore = match.AwayScore.Value;
+
+                standingsMap[homeId].GoalDifference += (homeScore - awayScore);
+                standingsMap[awayId].GoalDifference += (awayScore - homeScore);
+
+                if (homeScore > awayScore)
                 {
-                    homeStanding.MatchesPlayed++;
-                    awayStanding.MatchesPlayed++;
-                    homeStanding.GoalsFor += match.HomeScore.Value;
-                    homeStanding.GoalsAgainst += match.AwayScore.Value;
-                    awayStanding.GoalsFor += match.AwayScore.Value;
-                    awayStanding.GoalsAgainst += match.HomeScore.Value;
-
-                    if (match.HomeScore.Value > match.AwayScore.Value)
-                    {
-                        homeStanding.Wins++;
-                        awayStanding.Losses++;
-                    }
-                    else if (match.HomeScore.Value < match.AwayScore.Value)
-                    {
-                        awayStanding.Wins++;
-                        homeStanding.Losses++;
-                    }
-                    else
-                    {
-                        homeStanding.Draws++;
-                        awayStanding.Draws++;
-                    }
+                    standingsMap[homeId].Points += 3;
+                }
+                else if (awayScore > homeScore)
+                {
+                    standingsMap[awayId].Points += 3;
+                }
+                else
+                {
+                    standingsMap[homeId].Points += 1;
+                    standingsMap[awayId].Points += 1;
                 }
             }
 
-            foreach (var groupKey in standings.Keys.ToList())
-            {
-                standings[groupKey] = standings[groupKey]
-                    .OrderByDescending(s => s.Points)
-                    .ThenByDescending(s => s.GoalDifference)
-                    .ThenByDescending(s => s.GoalsFor)
-                    .ToList();
-            }
+            var groupedStandings = standingsMap.Values
+                .GroupBy(s => s.Team.GroupLetter)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.OrderByDescending(s => s.Points)
+                          .ThenByDescending(s => s.GoalDifference)
+                          .ToList()
+                );
 
-            var viewModel = new WorldCupViewModel
+            var viewModel = new GroupStandingsViewModel
             {
-                Groups = standings.OrderBy(g => g.Key).ToDictionary(g => g.Key, g => g.Value),
-                Matches = matches
+                Groups = groupedStandings
             };
 
             return View(viewModel);

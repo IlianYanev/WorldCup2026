@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WorldCup2026.Data;
 using WorldCup2026.Models;
@@ -29,35 +28,31 @@ namespace WorldCup2026.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var match = await _context.Matches.FindAsync(id);
-            if (match == null) return NotFound();
-            return View(match);
-        }
-
-        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, int? homeScore, int? awayScore)
+        public async Task<IActionResult> UpdateScore(int matchId, int? homeScore, int? awayScore, string submitAction)
         {
-            var match = await _context.Matches.FindAsync(id);
-            if (match == null) return NotFound();
-
-            match.HomeScore = homeScore;
-            match.AwayScore = awayScore;
-
-            if (homeScore.HasValue && awayScore.HasValue)
+            var match = await _context.Matches.FindAsync(matchId);
+            if (match == null)
             {
-                match.Status = "Finished";
+                return NotFound();
             }
-            else
+
+            if (submitAction == "reset")
             {
+                match.HomeScore = null;
+                match.AwayScore = null;
                 match.Status = "Scheduled";
+            }
+            else if (submitAction == "confirm")
+            {
+                match.HomeScore = homeScore ?? 0;
+                match.AwayScore = awayScore ?? 0;
+                match.Status = "Finished";
             }
 
             _context.Update(match);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
     }
