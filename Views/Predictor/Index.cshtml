@@ -1,9 +1,9 @@
-@model IEnumerable<WorldCup2026.Models.Team>
+@model List<WorldCup2026.Models.Team>
 @{
-    ViewData["Title"] = "Group Predictor";
+    ViewData["Title"] = "Tournament Predictor";
+    var groupColors = ViewBag.GroupColors as Dictionary<string, string> ?? new Dictionary<string, string>();
 
-    var countryCodes = new Dictionary<string, string>
-    {
+    var countryCodes = new Dictionary<string, string> {
         {"Mexico", "mx"}, {"South Africa", "za"}, {"South Korea", "kr"}, {"Czech Republic", "cz"},
         {"Canada", "ca"}, {"Bosnia and Herzegovina", "ba"}, {"Qatar", "qa"}, {"Switzerland", "ch"},
         {"Brazil", "br"}, {"Morocco", "ma"}, {"Haiti", "ht"}, {"Scotland", "gb-sct"},
@@ -18,90 +18,116 @@
         {"England", "gb-eng"}, {"Croatia", "hr"}, {"Ghana", "gh"}, {"Panama", "pa"}
     };
 
-    var groupColors = new Dictionary<string, string>
-    {
-        {"A", "#6A0dad"}, {"B", "#0052B4"}, {"C", "#00B2A9"}, {"D", "#FF4500"},
-        {"E", "#007A33"}, {"F", "#E10600"}, {"G", "#9EFD38"}, {"H", "#FF1493"},
-        {"I", "#38B6FF"}, {"J", "#8B0000"}, {"K", "#FFA07A"}, {"L", "#111111"}
-    };
-
     string GetFlagUrl(string countryName) => countryCodes.ContainsKey(countryName) ? $"https://flagcdn.com/w40/{countryCodes[countryName]}.png" : "https://placehold.co/40x30?text=⚽";
-    string GetGroupColor(string groupLetter) => groupColors.ContainsKey(groupLetter) ? groupColors[groupLetter] : "#212529";
-    string GetTextColor(string groupLetter) => (groupLetter == "G" || groupLetter == "K") ? "#111111" : "#FFFFFF";
 }
 
-<link rel="stylesheet" href="~/css/standings.css" />
+<style>
+    .custom-header { font-family: 'Chreed-ExtraBold', sans-serif; color: #0052B4; }
+</style>
 
-<div class="container-fluid mt-4 px-4">
-    <div class="text-center mb-4">
-        <h1 class="mb-2" style="font-family: 'Chreed-ExtraBold', sans-serif; color: #0052B4; font-size: 3rem;">WORLD CUP 2026 PREDICTOR</h1>
-        <p class="text-muted" style="max-width: 650px; margin: 0 auto; font-size: 1.1rem;">
-            Drag & Drop to arrange the teams in each group based on your predictions for the final standings. 
-            Points will be awarded automatically at the end of the tournament based on how accurately your predicted positions match the real results.
-        </p>
-    </div>
+<div class="container mt-4">
+    @if (ViewBag.IsFinished == true)
+    {
+        <h1 class="custom-header text-center mb-5">Tournament Summary</h1>
 
-    <form id="predictionForm" asp-controller="Predictor" asp-action="SavePredictions" method="post">
+        <div class="row mb-5 justify-content-center">
+            <div class="col-md-3">
+                <div class="card p-3 shadow-sm border-0" style="background-color: #f5e0c5; border-bottom: 5px solid #CD7F32;">
+                    <h6 class="text-muted text-center">3rd Place</h6>
+                    <h5 class="text-center">@ViewBag.Bronze?.Name <img src="@GetFlagUrl(ViewBag.Bronze?.Name)" width="25" class="ms-2" /></h5>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm border-0" style="background-color: #fff8e1; border-bottom: 5px solid #FFD700;">
+                    <h6 class="text-warning text-center fw-bold">CHAMPION</h6>
+                    <h5 class="text-center">@ViewBag.Gold?.Name <img src="@GetFlagUrl(ViewBag.Gold?.Name)" width="25" class="ms-2" /></h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 shadow-sm border-0" style="background-color: #f8f9fa; border-bottom: 5px solid #C0C0C0;">
+                    <h6 class="text-muted text-center">Runner-up</h6>
+                    <h5 class="text-center">@ViewBag.Silver?.Name <img src="@GetFlagUrl(ViewBag.Silver?.Name)" width="25" class="ms-2" /></h5>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="custom-header text-center mb-4">Final Group Standings</h3>
         <div class="row">
-            @foreach (var group in Model.GroupBy(t => t.GroupLetter).OrderBy(g => g.Key))
+            @foreach (var group in ((List<WorldCup2026.Models.GroupPrediction>)ViewBag.GroupPredictions).GroupBy(p => p.Team.GroupLetter))
             {
-                <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-4">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-header fw-bold d-flex justify-content-between align-items-center" 
-                             style="background-color: @GetGroupColor(group.Key.ToString()); color: @GetTextColor(group.Key.ToString());">
-                            <span>Group @group.Key</span>
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header text-white fw-bold" style="background-color: @(groupColors.ContainsKey(group.Key) ? groupColors[group.Key] : "#6c757d");">
+                            Group @group.Key
                         </div>
-                        <div class="card-body p-0">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="px-3">Team</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="sortable-group" data-group="@group.Key">
-                                    @foreach (var team in group)
-                                    {
-                                        <tr class="sortable-item" data-id="@team.Id">
-                                            <td class="px-3">
-                                                <span class="handle me-2" style="cursor: grab; color: #adb5bd;">☰</span>
-                                                <img src="@GetFlagUrl(team.Name)" alt="@team.Name" width="25" class="me-2 shadow-sm rounded-1" />
-                                                @team.Name
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var team in group.OrderBy(x => x.PredictedPosition))
+                            {
+                                <li class="list-group-item">
+                                    @team.PredictedPosition. @team.Team.Name 
+                                    <img src="@GetFlagUrl(team.Team.Name)" width="20" class="ms-2" />
+                                </li>
+                            }
+                        </ul>
                     </div>
                 </div>
             }
         </div>
-        
-        <input type="hidden" name="groupOrders" id="groupOrdersData" />
-        <div class="text-center mt-3 mb-5">
-            <button type="submit" class="btn btn-primary btn-lg shadow-sm px-5">Confirm</button>
+
+        <div class="text-center mt-5">
+            <a asp-action="Reset" class="btn btn-danger btn-lg px-5">Start New Tournament</a>
         </div>
-    </form>
+    }
+    else
+    {
+        <h1 class="custom-header text-center mb-5">Predict the Groups</h1>
+        <form id="predictorForm" asp-action="SavePredictions" method="post">
+            <input type="hidden" name="groupOrders" id="groupOrders" />
+            
+            <div class="row">
+                @foreach (var group in Model.GroupBy(t => t.GroupLetter))
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header text-white fw-bold" style="background-color: @(groupColors.ContainsKey(group.Key) ? groupColors[group.Key] : "#6c757d");">
+                                Group @group.Key
+                            </div>
+                            <div class="card-body p-2" id="group-@group.Key" data-group="@group.Key">
+                                @foreach (var team in group)
+                                {
+                                    <div class="list-group-item border mb-1 p-2 rounded cursor-pointer" data-id="@team.Id">
+                                        @team.Name <img src="@GetFlagUrl(team.Name)" width="25" class="ms-2" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            <div class="text-center mt-4">
+                <button type="button" class="btn btn-primary btn-lg px-5" onclick="submitPredictions()">Save & Next</button>
+            </div>
+        </form>
+    }
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script>
-    document.querySelectorAll('.sortable-group').forEach(tbody => {
-        new Sortable(tbody, {
-            animation: 150,
-            handle: '.handle',
-            ghostClass: 'table-active'
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script>
+        document.querySelectorAll('.card-body').forEach(el => {
+            new Sortable(el, { animation: 150 });
         });
-    });
 
-    document.getElementById('predictionForm').onsubmit = function() {
-        let results = {};
-        document.querySelectorAll('.sortable-group').forEach(tbody => {
-            let group = tbody.getAttribute('data-group');
-            let ids = Array.from(tbody.querySelectorAll('.sortable-item'))
-                           .map(tr => tr.getAttribute('data-id'));
-            results[group] = ids.join(',');
-        });
-        document.getElementById('groupOrdersData').value = JSON.stringify(results);
-    };
-</script>
+        function submitPredictions() {
+            let data = {};
+            document.querySelectorAll('[data-group]').forEach(groupEl => {
+                let groupId = groupEl.getAttribute('data-group');
+                let teamIds = Array.from(groupEl.querySelectorAll('[data-id]')).map(el => el.getAttribute('data-id'));
+                data[groupId] = teamIds.join(',');
+            });
+            document.getElementById('groupOrders').value = JSON.stringify(data);
+            document.getElementById('predictorForm').submit();
+        }
+    </script>
+}
