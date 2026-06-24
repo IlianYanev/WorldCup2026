@@ -110,7 +110,7 @@ namespace WorldCup2026.Data
                 new Stadium { Id = 16, Name = "Hard Rock Stadium", City = "Miami Gardens", Country = "USA", Capacity = 64767 }
             );
 
-            modelBuilder.Entity<Match>().HasData(
+            /*modelBuilder.Entity<Match>().HasData(
                 new Match { Id = 1, HomeTeamId = 1, AwayTeamId = 2, StadiumId = 1, KickOffTime = DateTime.Parse("2026-06-11T22:00:00"), Status = "Scheduled" },
                 new Match { Id = 2, HomeTeamId = 3, AwayTeamId = 4, StadiumId = 4, KickOffTime = DateTime.Parse("2026-06-12T05:00:00"), Status = "Scheduled" },
                 new Match { Id = 3, HomeTeamId = 5, AwayTeamId = 6, StadiumId = 5, KickOffTime = DateTime.Parse("2026-06-12T22:00:00"), Status = "Scheduled" },
@@ -183,7 +183,7 @@ namespace WorldCup2026.Data
                 new Match { Id = 70, HomeTeamId = 43, AwayTeamId = 42, StadiumId = 16, KickOffTime = DateTime.Parse("2026-07-03T18:00:00"), Status = "Scheduled" },
                 new Match { Id = 71, HomeTeamId = 48, AwayTeamId = 45, StadiumId = 7, KickOffTime = DateTime.Parse("2026-07-03T22:00:00"), Status = "Scheduled" },
                 new Match { Id = 72, HomeTeamId = 46, AwayTeamId = 47, StadiumId = 8, KickOffTime = DateTime.Parse("2026-07-03T22:00:00"), Status = "Scheduled" }
-            );
+            );*/
 
             modelBuilder.Entity<User>().HasData(
                 new User

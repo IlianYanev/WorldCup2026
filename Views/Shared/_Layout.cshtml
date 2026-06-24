@@ -34,14 +34,17 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                 <li class="nav-item">
-                     <a class="nav-link" asp-controller="Predictor" asp-action="Index">Предиктор</a>
+                     <a class="nav-link" asp-controller="Predictor" asp-action="Index">Predictor</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-controller="Leaderboard" asp-action="Index">Leaderboard</a>
                 </li>
                 }
             </ul>
             <div class="d-flex align-items-center gap-3">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    <span class="text-white fw-semibold">👋 Welcome, @User.Identity.Name</span>
+                    <span class="text-white fw-semibold">Welcome, @User.Identity.Name</span>
                     <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
                         <button type="submit" class="btn btn-sm btn-outline-danger px-3">Logout</button>
                     </form>

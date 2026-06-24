@@ -1,10 +1,10 @@
 @model WorldCup2026.Models.GroupStandingsViewModel
+@using Microsoft.AspNetCore.Html
 
 @{
-    ViewData["Title"] = "Standings & Brackets";
-    
-    var countryCodes = new Dictionary<string, string>
-    {
+    ViewData["Title"] = "Tournament Statistics";
+
+    var countryCodes = new Dictionary<string, string> {
         {"Mexico", "mx"}, {"South Africa", "za"}, {"South Korea", "kr"}, {"Czech Republic", "cz"},
         {"Canada", "ca"}, {"Bosnia and Herzegovina", "ba"}, {"Qatar", "qa"}, {"Switzerland", "ch"},
         {"Brazil", "br"}, {"Morocco", "ma"}, {"Haiti", "ht"}, {"Scotland", "gb-sct"},
@@ -27,58 +27,133 @@
     };
 
     string GetFlagUrl(string countryName) => countryCodes.ContainsKey(countryName) ? $"https://flagcdn.com/w40/{countryCodes[countryName]}.png" : "https://placehold.co/40x30?text=⚽";
-    string GetGroupColor(string groupLetter) => groupColors.ContainsKey(groupLetter) ? groupColors[groupLetter] : "#212529";
-    string GetTextColor(string groupLetter) => (groupLetter == "G" || groupLetter == "K") ? "#111111" : "#FFFFFF";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/standings.css" asp-append-version="true" />
-}
+<style>
+    .card-header { font-weight: bold; }
+    .table td { vertical-align: middle; }
+    .table thead th { white-space: nowrap; }
+</style>
 
 <div class="container-fluid px-4 mt-4">
-    <h1 class="text-center mb-5 fw-bold main-title" style="font-size: 2.5rem; background: linear-gradient(135deg, #6A0dad, #0052B4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Tournament Statistics & Brackets</h1>
+    <h1 class="text-center mb-5 fw-bold" style="font-size: 2.5rem; color: #0052B4; font-family: 'Chreed-ExtraBold', sans-serif;">Tournament Statistics</h1>
 
-    <h2 class="section-title mb-4">📊 Group Standings</h2>
+    <h2 class="mb-4">📊 Group Standings</h2>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 mb-5">
-        @foreach (var group in Model.Groups)
+        @foreach (var group in Model.Groups.OrderBy(g => g.Key))
         {
-            var headerBg = GetGroupColor(group.Key);
-            var headerText = GetTextColor(group.Key);
-
             <div class="col">
                 <div class="card shadow-sm border-0 rounded-3 overflow-hidden h-100 bg-white">
-                    <div class="card-header border-0 px-3 py-2 fw-bold" style="background-color: @headerBg; color: @headerText; font-size: 0.9rem;">
+                    <div class="card-header border-0 px-3 py-2 text-white" style="background-color: @(groupColors.ContainsKey(group.Key) ? groupColors[group.Key] : "#6c757d");">
                         Group @group.Key
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
+                    <table class="table table-hover mb-0" style="table-layout: fixed; width: 100%;">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-2" style="width: 35px;">Pos</th>
+                                <th>Team</th>
+                                <th class="text-center" style="width: 40px;">GD</th>
+                                <th class="text-center pe-2" style="width: 40px;">Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var standing in group.Value)
+                            {
                                 <tr>
-                                    <th class="ps-3" style="width: 45px;">Pos</th>
-                                    <th>Team</th>
-                                    <th class="text-center" style="width: 45px;">GD</th>
-                                    <th class="text-center pe-3" style="width: 45px;">Pts</th>
+                                    <td class="fw-bold ps-2 text-muted">@(group.Value.IndexOf(standing) + 1)</td>
+                                    <td class="fw-semibold text-truncate">
+                                        <img src="@GetFlagUrl(standing.Team.Name)" class="rounded shadow-sm me-2" style="width: 22px; height: 14px; object-fit: cover;" />
+                                        @standing.Team.Name
+                                    </td>
+                                    <td class="text-center text-muted">@standing.GoalDifference</td>
+                                    <td class="text-center fw-bold pe-2">@standing.Points</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @for (int i = 0; i < group.Value.Count; i++)
-                                {
-                                    var standing = group.Value[i];
-                                    <tr style="@(i < 2 ? "background-color: #f7fff9;" : "")">
-                                        <td class="fw-bold ps-3 text-muted">@(i + 1)</td>
-                                        <td class="fw-semibold text-truncate" style="max-width: 120px;">
-                                            <img src="@GetFlagUrl(standing.Team.Name)" class="rounded shadow-sm me-2" style="width: 22px; height: 14px; object-fit: cover;" alt="" />
-                                            @standing.Team.Name
-                                        </td>
-                                        <td class="text-center text-muted">@standing.GoalDifference</td>
-                                        <td class="text-center fw-bold pe-3">@standing.Points</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         }
     </div>
+
+    <hr class="my-5" />
+    <h2 class="mb-4 text-center">🏆 Knockout Phase</h2>
+
+    @{
+        var knockoutMatches = (ViewBag.AllKnockoutMatches as List<WorldCup2026.Models.Match>) ?? new List<WorldCup2026.Models.Match>();
+        var ro32 = knockoutMatches.Where(m => m.Id >= 73 && m.Id <= 88).ToList();
+        var ro16 = knockoutMatches.Where(m => m.Id >= 89 && m.Id <= 96).ToList();
+        var qf = knockoutMatches.Where(m => m.Id >= 97 && m.Id <= 100).ToList();
+        var sf = knockoutMatches.Where(m => m.Id >= 101 && m.Id <= 102).ToList();
+        var finals = knockoutMatches.Where(m => m.Id >= 103 && m.Id <= 104).ToList();
+    }
+
+    @RenderKnockoutPhase("ROUND OF 32", ro32, "col-md-3")
+    @RenderKnockoutPhase("ROUND OF 16", ro16, "col-md-3")
+    @RenderKnockoutPhase("QUARTER-FINALS", qf, "col-md-3")
+    @RenderKnockoutPhase("SEMI-FINALS", sf, "col-md-3")
+
+    @if (finals.Any()) {
+        <hr class="w-50 mx-auto my-5" />
+        <h3 class="text-center fw-bold mt-4 mb-3" style="color: #d4af37; font-family: 'Chreed-ExtraBold', sans-serif;">🏆 FINALS</h3>
+        <div class="row text-center mb-4 justify-content-center">
+            @foreach (var match in finals.OrderBy(m => m.Id)) {
+                <div class="col-md-4 mb-2">
+                    <div class="card p-3 border shadow-sm @(match.Id == 104 ? "bg-warning text-dark border-warning" : "bg-dark text-white")">
+                        <small>@(match.Id == 104 ? "GRAND FINAL" : "3rd Place Play-off")</small><br />
+                        <span class="fw-bold fs-5">@match.HomeTeam?.Name vs @match.AwayTeam?.Name</span><br />
+                        <span class="fw-bold fs-4">@(match.HomeScore ?? 0) - @(match.AwayScore ?? 0)</span>
+                    </div>
+                </div>
+            }
+        </div>
+
+        { // <--- ПРЕМАХНАТИЯТ ЗНАК @
+            var finalMatch = finals.FirstOrDefault(m => m.Id == 104 && m.Status == "Finished");
+            var thirdMatch = finals.FirstOrDefault(m => m.Id == 103 && m.Status == "Finished");
+
+            if (finalMatch != null && thirdMatch != null)
+            {
+                <div class="mt-5 p-4 bg-light rounded shadow-sm border text-center">
+                    <h2 class="fw-bold" style="color: #0052B4;">🥇 FINAL STANDINGS 🥉</h2>
+                    <div class="d-flex justify-content-center align-items-end mt-4 gap-4 flex-wrap">
+                        @{
+                            var winner = finalMatch.HomeScore > finalMatch.AwayScore ? finalMatch.HomeTeam : finalMatch.AwayTeam;
+                            var runnerUp = finalMatch.HomeScore > finalMatch.AwayScore ? finalMatch.AwayTeam : finalMatch.HomeTeam;
+                            var thirdPlace = thirdMatch.HomeScore > thirdMatch.AwayScore ? thirdMatch.HomeTeam : thirdMatch.AwayTeam;
+                        }
+
+                        <div class="text-center" style="width: 120px;">
+                            <div class="fs-1">🥈</div>
+                            <div class="fw-bold">@runnerUp?.Name</div>
+                        </div>
+                        <div class="text-center" style="width: 150px;">
+                            <div class="fs-1">🥇</div>
+                            <div class="fw-bold fs-4">@winner?.Name</div>
+                        </div>
+                        <div class="text-center" style="width: 120px;">
+                            <div class="fs-1">🥉</div>
+                            <div class="fw-bold">@thirdPlace?.Name</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
 </div>
+
+@functions {
+    public IHtmlContent RenderKnockoutPhase(string title, List<WorldCup2026.Models.Match> matches, string colClass)
+    {
+        if (!matches.Any()) return Html.Raw("");
+        
+        var output = $"<h3 class=\"text-center fw-bold mt-5 mb-3\" style=\"color: #0052B4; font-family: 'Chreed-ExtraBold', sans-serif;\">{title}</h3>";
+        output += "<div class=\"row text-center mb-4 justify-content-center\">";
+        foreach(var match in matches)
+        {
+            output += $"<div class=\"{colClass} mb-2\"><div class=\"card p-2 border shadow-sm bg-light\"><small class=\"text-muted\">Match {match.Id}</small><br/><strong>{match.HomeTeam?.Name}</strong> vs <strong>{match.AwayTeam?.Name}</strong><br/><span class=\"text-primary fw-bold\">{match.HomeScore ?? 0} - {match.AwayScore ?? 0}</span></div></div>";
+        }
+        output += "</div>";
+        return Html.Raw(output);
+    }
+}
